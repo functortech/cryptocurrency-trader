@@ -1,0 +1,1 @@
+This is a Forex Trader simulator. It allows users to register, login, as well as view, create and accept trade orders.
