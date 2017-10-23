@@ -6,10 +6,20 @@ import com.twitter.util.Await
 
 
 object Main {
-  val api: Endpoint[String] =
+
+  val greetingMessage: Endpoint[String] =
     get("index") {
       Ok("Welcome to the Crypto[Trader] - your ultimate cryptocurrency trader")
     }
+
+  val aboutUsMessage: Endpoint[String] =
+    get("index" :: "about") {
+      Ok("We are the most convenient cryptocurrency trader on the web")
+    }
+
+  val api =
+    greetingMessage :+:
+    aboutUsMessage
 
   def main(args: Array[String]): Unit = {
     val port = 8081
