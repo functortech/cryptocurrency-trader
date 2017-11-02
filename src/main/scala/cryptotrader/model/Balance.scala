@@ -1,3 +1,3 @@
 package cryptotrader.model
 
-case class Balance(owner: Int, btc: Double, usd: Double)
+case class Balance(id: Int, owner: Int, btc: Double, usd: Double)

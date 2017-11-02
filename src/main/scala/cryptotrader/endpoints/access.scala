@@ -2,8 +2,7 @@ package cryptotrader
 package endpoints
 
 import io.finch._
-import io.finch.circe._
-import io.circe.generic.auto._
+import io.finch.circe._, io.circe.generic.auto._
 
 import cryptotrader.model._
 import crypto._

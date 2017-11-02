@@ -13,6 +13,11 @@ package object endpoints {
       }
     }
 
+  def authenticatedUserWithBalance: Endpoint[(UserData, Balance)] =
+    authenticatedUser map { u =>
+      u -> db.balance.getByUser(u.id)
+    }
+
   def msg(str: String) = Ok(Map("message" -> str))
   def err(str: String) = BadRequest(new RuntimeException(str))
 }
