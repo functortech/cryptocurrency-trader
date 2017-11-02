@@ -28,8 +28,7 @@ object access {
     }
 
   def logout =
-    delete(root) :: authenticatedUser mapOutput {
-      case Some(u) => msg(s"You have logged out, $u. Please delete your session")
-      case None => err("You were never logged in in first place")
+    delete(root) :: authenticatedUser mapOutput { u =>
+      msg(s"You have logged out, $u. Please delete your session")
     }
 }
