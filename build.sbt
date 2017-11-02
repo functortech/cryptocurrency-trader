@@ -1,13 +1,19 @@
 val ScalaVer = "2.12.4"
 
 val Finch = "0.16.0-RC1"
+val Circe = "0.8.0"
 
 lazy val commonSettings = Seq(
   name    := "crypto-trader"
 , version := "0.1.0"
 , scalaVersion := ScalaVer
 , libraryDependencies ++= Seq(
-    "com.github.finagle" %% "finch-core" % Finch
+    "com.github.finagle" %% "finch-core"  % Finch
+  , "com.github.finagle" %% "finch-circe" % Finch
+
+  , "io.circe" %% "circe-core"    % Circe
+  , "io.circe" %% "circe-generic" % Circe
+  , "io.circe" %% "circe-parser"  % Circe
   )
 
 , scalacOptions ++= Seq(
