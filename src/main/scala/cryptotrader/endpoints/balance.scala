@@ -8,6 +8,8 @@ import cryptotrader.model._
 object balance {
   def all = myBalance
 
+  val root = / :: "balance"
+
   def myBalance: Endpoint[Balance] =
     get(root) :: authenticatedUser mapOutput { u =>
       Ok(db.balance.getByUser(u.id))

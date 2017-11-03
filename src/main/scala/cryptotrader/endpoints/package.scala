@@ -5,6 +5,8 @@ import io.finch._
 import cryptotrader.model._
 
 package object endpoints {
+  type AnyJson = Map[String, String]
+
   def authenticatedUser: Endpoint[UserData] =
     header("x-access-token") mapOutput { id =>
       db.user.get(id.toInt) match {
@@ -18,6 +20,6 @@ package object endpoints {
       u -> db.balance.getByUser(u.id)
     }
 
-  def msg(str: String) = Ok(Map("message" -> str))
-  def err(str: String) = BadRequest(new RuntimeException(str))
+  def msg(x: Any     ): Output[AnyJson] = Ok(Map("message" -> x.toString))
+  def err(str: String): Output[Nothing] = BadRequest(new RuntimeException(str))
 }
