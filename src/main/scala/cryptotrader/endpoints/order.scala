@@ -54,7 +54,7 @@ object order {
   def executeOrder(order: Order, owner: UserData
     , myBalance: Balance, trBalance: Balance): Output[AnyJson] =
     order match {
-      case Sell(_, _, btc, usd) if
+      case Sell(id, _, btc, usd) if
           myBalance.usd >= usd
       &&  trBalance.btc >= btc =>
         val myBalanceNew = myBalance.copy(
@@ -66,10 +66,11 @@ object order {
 
         db.balance.update(myBalanceNew)
         db.balance.update(trBalanceNew)
+        db.order  .delete(id)
 
         msg(s"Successfully bought $btc BTC for $usd USD")
 
-      case Buy(_, _, btc, usd) if
+      case Buy(id, _, btc, usd) if
           myBalance.btc >= btc
       &&  trBalance.usd >= usd =>
         val myBalanceNew = myBalance.copy(
@@ -81,6 +82,8 @@ object order {
 
         db.balance.update(myBalanceNew)
         db.balance.update(trBalanceNew)
+        db.order  .delete(id)
+
 
         msg(s"Successfully bought $btc BTC for $usd USD")
 

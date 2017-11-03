@@ -19,4 +19,5 @@ object order extends MemoryDb[Order] {
 
   def list(): List[Order] = database.values.toList
 
+  def delete(id: Int): Unit = database -= id
 }
