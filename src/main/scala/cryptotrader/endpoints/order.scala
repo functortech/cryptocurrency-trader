@@ -51,15 +51,18 @@ object order {
         }
     }
 
-  val ownThisOrder = ValidationRule[Int :: UserData :: HNil]("have you owning this order") {
-    case orderId :: userData :: HNil =>
-      db.order.get(orderId).exists(_.owner == userData.id) }
+  val ownThisOrder = ValidationRule[Option[Order] :: UserData :: HNil]("have you owning this order") {
+    case mOrder :: userData :: HNil =>
+      mOrder.exists(_.owner == userData.id) }
 
   def deleteOrder: Endpoint[AnyJson] =
-    delete(root) :: (int :: authenticatedUser should ownThisOrder) mapOutput { case orderId :: user :: HNil =>
-      db.order.delete(orderId)
-      msg(s"Successfully deleted trade order $orderId")
-    }
+    delete(root) :: (int.mapAsync(db.order.getAsync) ::
+      authenticatedUser should ownThisOrder) mapOutputAsync {
+        case Some(order) :: user :: HNil =>
+          for {
+            _ <- db.order.deleteAsync(order.id)
+          } yield msg(s"Successfully deleted trade order ${order.id}")
+        }
 
   def executeOrder(order: Order, owner: UserData
     , myBalance: Balance, trBalance: Balance): Output[AnyJson] =
