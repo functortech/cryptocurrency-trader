@@ -9,7 +9,7 @@ import io.finch.circe._, io.circe.generic.auto._
 import cryptotrader.model._
 
 object order {
-  def all = placeOrder :+: listOrders :+: trade
+  def all = placeOrder :+: listOrders :+: trade :+: deleteOrder
 
   def root = / :: "order"
 
@@ -49,6 +49,16 @@ object order {
           case Some(resp) => resp
           case None => err("Either order or its owner not found - perhaps the order has expired")
         }
+    }
+
+  val ownThisOrder = ValidationRule[Int :: UserData :: HNil]("have you owning this order") {
+    case orderId :: userData :: HNil =>
+      db.order.get(orderId).exists(_.owner == userData.id) }
+
+  def deleteOrder: Endpoint[AnyJson] =
+    delete(root) :: (int :: authenticatedUser should ownThisOrder) mapOutput { case orderId :: user :: HNil =>
+      db.order.delete(orderId)
+      msg(s"Successfully deleted trade order $orderId")
     }
 
   def executeOrder(order: Order, owner: UserData
